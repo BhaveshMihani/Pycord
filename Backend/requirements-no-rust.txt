@@ -1,0 +1,16 @@
+# Alternative requirements file that avoids packages requiring Rust compilation
+# Use this if you're having Rust/Cargo issues
+
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+motor>=3.3.0
+# Using pymongo without srv support to avoid compilation
+pymongo[srv]>=4.6.0; python_version < "3.13"
+pymongo>=4.6.0; python_version >= "3.13"
+python-dotenv>=1.0.0
+# Try to get pre-built pydantic wheels
+pydantic>=2.5.0
+python-multipart>=0.0.6
+httpx>=0.25.0
+pyjwt>=2.8.0
+
