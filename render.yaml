@@ -1,11 +1,9 @@
 services:
-  # Backend Web Service (FastAPI)
   - type: web
-    name: pycord-backend
+    name: pycord
     env: python
-    rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: "./build.sh"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: MONGODB_URL
         sync: false
@@ -17,24 +15,5 @@ services:
         sync: false
       - key: SKIP_WEBHOOK_VERIFICATION
         value: "true"
-      - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: pycord-frontend
-          envVarKey: RENDER_EXTERNAL_URL
-
-  # Frontend Static Site (React/Vite)
-  - type: web
-    name: pycord-frontend
-    env: static
-    rootDir: frontend
-    buildCommand: "npm install && npm run build"
-    staticPublishPath: "./dist"
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: pycord-backend
-          envVarKey: RENDER_EXTERNAL_URL
       - key: VITE_CLERK_PUBLISHABLE_KEY
         sync: false

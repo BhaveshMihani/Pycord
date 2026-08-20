@@ -51,9 +51,33 @@ app.include_router(webhooks.router, prefix="/api/webhooks", tags=["webhooks"])
 app.include_router(chatrooms.router, prefix="/api/chatrooms", tags=["chatrooms"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 
-@app.get("/")
-async def root():
-    return {"message": "Pycord Backend API", "status": "running"}
+from fastapi.responses import FileResponse
+from pathlib import Path
+
+# --- Serve React Frontend ---
+# Resolve path to frontend/dist
+frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    # Ignore API routes - let them be handled by FastAPI (or return 404 if invalid)
+    if full_path.startswith("api/"):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="API route not found")
+        
+    # If frontend hasn't been built yet (e.g. local dev), return basic message
+    if not frontend_dist.exists():
+        if full_path == "":
+            return {"message": "Pycord Backend API (Frontend not built yet)", "status": "running"}
+        raise HTTPException(status_code=404, detail="Not Found")
+        
+    # Check if the requested file exists in dist (e.g., /assets/..., /vite.svg)
+    requested_file = frontend_dist / full_path
+    if full_path and requested_file.is_file():
+        return FileResponse(requested_file)
+        
+    # For any other route (like /login, /room/123), return index.html for React Router
+    return FileResponse(frontend_dist / "index.html")
 
 @app.get("/api/health")
 async def health_check():
