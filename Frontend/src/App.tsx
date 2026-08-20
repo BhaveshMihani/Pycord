@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@clerk/clerk-react';
+import { ClerkProvider, SignedIn, SignedOut, useAuth } from '@clerk/clerk-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
+import LandingPage from './pages/LandingPage';
 import { AuthUtils } from './utils/auth';
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_ZmVhc2libGUtZmlsbHktMi5jbGVyay5hY2NvdW50cy5kZXYk";
@@ -87,12 +88,21 @@ function App() {
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
       <BrowserRouter>
-        <SignedIn>
-          <AppLayout />
-        </SignedIn>
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
+        <Routes>
+          <Route 
+            path="/*" 
+            element={
+              <>
+                <SignedIn>
+                  <AppLayout />
+                </SignedIn>
+                <SignedOut>
+                  <LandingPage />
+                </SignedOut>
+              </>
+            } 
+          />
+        </Routes>
       </BrowserRouter>
     </ClerkProvider>
   );
