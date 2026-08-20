@@ -27,7 +27,7 @@ export interface Message {
 }
 
 class ApiService {
-  private baseUrl = '/api';
+  private baseUrl = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api` : '/api';
 
   private async getAuthHeaders(): Promise<Record<string, string>> {
     const tokenData = AuthUtils.getStoredToken();

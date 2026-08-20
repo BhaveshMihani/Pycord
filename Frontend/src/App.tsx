@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import { AuthUtils } from './utils/auth';
 
-const clerkPubKey = "pk_test_ZmVhc2libGUtZmlsbHktMi5jbGVyay5hY2NvdW50cy5kZXYk";
+const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_ZmVhc2libGUtZmlsbHktMi5jbGVyay5hY2NvdW50cy5kZXYk";
 
 function AppLayout() {
   const { getToken, isSignedIn } = useAuth();
