@@ -56,7 +56,7 @@ from pathlib import Path
 
 # --- Serve React Frontend ---
 # Resolve path to frontend/dist
-frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+frontend_dist = Path(__file__).parent.parent / "Frontend" / "dist"
 
 @app.get("/{full_path:path}")
 async def serve_react_app(full_path: str):
